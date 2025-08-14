@@ -1,10 +1,13 @@
 #ifndef IRCSERVER_HPP
 #define IRCSERVER_HPP
-#define PKT_SIZE 1<<14
 
 #include "socket-server/Socket.hpp"
 #include "IRCClient.hpp"
 #include <vector>
+
+
+typedef std::vector<IRCClient> VClients;
+
 class IRCServer : public SocketServer
 {
 private:
@@ -12,8 +15,8 @@ private:
 public:
   IRCServer(/* args */);
   ~IRCServer();
-  virtual void handleRequest(Client& c);
-  virtual void sendResponse(Client& c);
+  virtual Response* onRequest(Request* req);
+  /* virtual void sendResponse(Client& c); */
 };
 
 #endif
