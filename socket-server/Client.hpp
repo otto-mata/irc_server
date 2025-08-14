@@ -9,7 +9,9 @@ private:
   char buffer[PKT_SIZE + 1];
   char rbuffer[PKT_SIZE + 1];
   size_t outlen;
-  void  reset(void);
+  Response* res;
+  bool mustSend;
+  void reset(void);
 
 public:
   Client(void);
@@ -18,11 +20,9 @@ public:
   void setfileno(int fd);
   size_t outsz(void);
   void setoutsz(size_t n);
-  ssize_t receive(void);
+  Request* receive(void);
   ssize_t respond(void);
-  char *res(void);
-  char *req(void);
+  void setRes(Response* res);
 };
-
 
 #endif

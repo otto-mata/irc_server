@@ -1,9 +1,11 @@
 #ifndef SOCKET_HPP
 #define SOCKET_HPP
 
-#include "common.hpp"
 #include "Client.hpp"
+#include "common.hpp"
 #include <exception>
+#include <sstream>
+#include <stdexcept>
 
 #ifndef BACKLOG
 #define BACKLOG 5
@@ -24,7 +26,7 @@ private:
   int fd;
   SockAddrIn in;
   bool mustStop;
-	Client clients[MAX_CLIENTS];
+  Client clients[MAX_CLIENTS];
 
 public:
   SocketServer(unsigned short serverPort);
@@ -32,12 +34,17 @@ public:
 
   void serve(void);
   int fileno(void);
-	virtual void handleRequest(Client& c);
-	virtual void sendResponse(Client& c);
+  virtual Response* onRequest(Request* req);
+  Client& clientByFileno(int fd);
   class SocketServerException : public std::exception
   {
   public:
     virtual const char* what() const throw();
+  };
+  class ClientNotFound : public std::exception
+  {
+  public:
+    virtual const char* what() const throw() { return "Client not found."; }
   };
 };
 
