@@ -65,3 +65,27 @@ IRCClient::clear(void)
 {
   socketClient = 0;
 }
+
+void
+IRCClient::addToBuffer(std::string& s)
+{
+  _buffering += s;
+}
+
+bool
+IRCClient::bufferReady(void)
+{
+  return _buffering.find("\r\n") != std::string::npos;
+}
+
+std::string
+IRCClient::getBuffer(void)
+{
+  return std::string(_buffering);
+}
+
+void
+IRCClient::emptyBuffer(void)
+{
+  _buffering.clear();
+}

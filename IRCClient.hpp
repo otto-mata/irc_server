@@ -2,12 +2,14 @@
 #define IRCCLIENT_HPP
 #include "socket-server/Client.hpp"
 #include <string>
+#include <sstream>
 
 class IRCClient
 {
 private:
   Client* socketClient;
   std::string _nickname;
+  std::string _buffering;
 
 public:
   IRCClient();
@@ -20,6 +22,10 @@ public:
   bool connected(void);
   bool connected(void) const;
   void clear(void);
+  void addToBuffer(std::string& s);
+  bool bufferReady(void);
+  std::string getBuffer(void);
+  void emptyBuffer(void);
 };
 
 #endif
