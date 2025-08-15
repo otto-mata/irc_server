@@ -16,6 +16,7 @@ public:
   IRCServer(/* args */);
   ~IRCServer();
   virtual Response* onRequest(Request* req);
+  virtual void onClientDisconnect(Client& c);
   /* virtual void sendResponse(Client& c); */
 };
 

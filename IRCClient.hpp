@@ -17,6 +17,9 @@ public:
   ~IRCClient();
   int fd(void);
   int fd(void) const;
+  bool connected(void);
+  bool connected(void) const;
+  void clear(void);
 };
 
 #endif

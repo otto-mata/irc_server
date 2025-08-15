@@ -5,6 +5,7 @@ IRCClient::IRCClient()
 {
 }
 
+
 IRCClient::IRCClient(Client& sockC)
   : socketClient(&sockC)
 {
@@ -25,11 +26,42 @@ IRCClient::~IRCClient() {}
 int
 IRCClient::fd(void)
 {
-  return socketClient->fileno();
+  if (socketClient)
+    return socketClient->fileno();
+  else
+    return -1;
 }
 
 int
 IRCClient::fd(void) const
 {
-  return socketClient->fileno();
+  if (socketClient)
+    return socketClient->fileno();
+  else
+    return -1;
+}
+
+bool
+IRCClient::connected(void)
+{
+  if (socketClient)
+    return socketClient->connected();
+  else
+   return false;
+}
+
+bool
+IRCClient::connected(void) const
+{
+  if (socketClient)
+    return socketClient->connected();
+  else
+   return false;
+}
+
+
+void
+IRCClient::clear(void)
+{
+  socketClient = 0;
 }
