@@ -34,6 +34,7 @@ public:
 
   void serve(void);
   int fileno(void);
+  virtual void onClientDisconnect(Client& c);
   virtual Response* onRequest(Request* req);
   Client& clientByFileno(int fd);
   class SocketServerException : public std::exception

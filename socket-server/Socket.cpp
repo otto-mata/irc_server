@@ -1,4 +1,5 @@
 #include "Socket.hpp"
+#include <cerrno>
 #include <cmath>
 #include <cstdio>
 #include <cstring>
@@ -7,7 +8,6 @@
 #include <sys/select.h>
 #include <sys/socket.h>
 #include <unistd.h>
-#include <cerrno>
 
 SocketServer::SocketServer(unsigned short serverPort)
 {
@@ -23,7 +23,6 @@ SocketServer::SocketServer(unsigned short serverPort)
     throw std::exception();
   }
   ::memset(&in, 0, sizeof(in));
-  ::memset(&clients, 0, sizeof(clients));
   in.sin_addr.s_addr = INADDR_ANY;
   in.sin_port = port;
   in.sin_family = AF_INET;
@@ -51,15 +50,16 @@ SocketServer::~SocketServer()
 Response*
 SocketServer::onRequest(Request* req)
 {
-  std::cout << "Acknowledged request from client, size: " << req->size() << std::endl;
+  std::cout << "Acknowledged request from client, size: " << req->size()
+            << std::endl;
+  delete req;
   return new Response();
 }
 
 Client&
 SocketServer::clientByFileno(int fd)
 {
-  for (size_t i = 0; i < MAX_CLIENTS; i++)
-  {
+  for (size_t i = 0; i < MAX_CLIENTS; i++) {
     if (clients[i].fileno() == fd)
       return (clients[i]);
   }
@@ -90,9 +90,9 @@ SocketServer::serve(void)
     for (int i = 0; i < MAX_CLIENTS; ++i) {
       Client& c = clients[i];
 
-      if (c.fileno() > 0) {
+      if (c.fileno() >= 0) {
         FD_SET(c.fileno(), &rfds);
-        if (c.outsz() > 0)
+        if (c.outsz() >= 0)
           FD_SET(c.fileno(), &wfds);
         if (c.fileno() > fdmax)
           fdmax = c.fileno();
@@ -111,7 +111,8 @@ SocketServer::serve(void)
         perror("SocketServer::serve - accept");
         return;
       }
-      std::cerr << "[+][SocketServer] New client connected on fd " << cfd << std::endl;
+      std::cerr << "[+][SocketServer] New client connected on fd " << cfd
+                << std::endl;
       for (int i = 0; i < MAX_CLIENTS; i++) {
         if (clients[i].fileno() == -1) {
           clients[i].setfileno(cfd);
@@ -123,16 +124,32 @@ SocketServer::serve(void)
 
     for (int i = 0; i < MAX_CLIENTS; ++i) {
       Client& c = clients[i];
-      if (c.fileno() > 0 && FD_ISSET(c.fileno(), &rfds)) {
-        std::cerr << "[+][SocketServer] Received data from client #" << c.fileno() << std::endl;
+      // int clientFd = c.fileno();
+      if (c.fileno() > -1 && FD_ISSET(c.fileno(), &rfds)) {
+        std::cerr << "[+][SocketServer] Received data from client #"
+                  << c.fileno() - fd << std::endl;
         Request* req = c.receive();
+        if (!req) {
+          onClientDisconnect(c);
+          c.reset();
+          continue;
+        }
         Response* res = onRequest(req);
         c.setRes(res);
       }
-      if (c.fileno() > 0 && FD_ISSET(c.fileno(), &wfds)) {
-        std::cerr << "[+][SocketServer] Sending data to client #" << c.fileno() << std::endl;
-        c.respond();
+      if (c.fileno() > -1 && FD_ISSET(c.fileno(), &wfds)) {
+        if (c.respond() == 0) {
+          onClientDisconnect(c);
+          c.reset();
+        }
       }
     }
   }
+}
+
+void
+SocketServer::onClientDisconnect(Client& c)
+{
+  std::cout << "[*][SocketServer] Client on fd #" << c.fileno()
+            << " disconnected." << std::endl;
 }

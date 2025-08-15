@@ -11,7 +11,7 @@ private:
   size_t outlen;
   Response* res;
   bool mustSend;
-  void reset(void);
+  bool disconnected;
 
 public:
   Client(void);
@@ -23,6 +23,9 @@ public:
   Request* receive(void);
   ssize_t respond(void);
   void setRes(Response* res);
+  bool connected(void);
+  bool connected(void) const;
+  void reset(void);
 };
 
 #endif

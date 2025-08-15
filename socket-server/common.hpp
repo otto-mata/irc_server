@@ -8,7 +8,6 @@
 #include <netinet/in.h>
 #include <string>
 typedef struct sockaddr_in SockAddrIn;
-
 struct Response
 {
 public:
