@@ -7,9 +7,13 @@ Command::Command(std::vector<Token>& tv)
   params = 0;
   trailing = 0;
   for (std::vector<Token>::iterator it = tv.begin(); it < tv.end(); it++) {
+    if (it->getType() == SPACE)
+      continue;
     if (i == 0 && it->getType() == COLON)
       source = new std::string((++it)->getLexeme());
-    else if (it->getType() == COLON) {
+    else if ((i == 0 || i == 1) && it->getType() == STRING) {
+      cmd = it->getLexeme();
+    } else if (it->getType() == COLON) {
       trailing = new std::string();
       while (it < tv.end()) {
         if (it->getType() == STRING)
@@ -18,8 +22,6 @@ Command::Command(std::vector<Token>& tv)
           trailing->append(" ");
         it++;
       }
-    } else if ((i == 1 && source) || (!source && i == 0)) {
-      cmd = it->getLexeme();
     } else {
       if (!params)
         params = new std::vector<std::string>();
