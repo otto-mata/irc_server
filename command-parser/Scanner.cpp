@@ -52,14 +52,14 @@ Scanner::addStringToken(void)
   while (peek() != ' ' && peek() != ':' && !isAtEnd())
     advance();
   std::string s = _source.substr(_start, _curr - _start);
-  _tokens.push_back(Token(STRING, s, _start));
+  _tokens.push_back(Token(STRING, s));
 }
 
 void
 Scanner::addToken(TokenType t)
 {
   std::string s = _source.substr(_start, _curr - _start);
-  _tokens.push_back(Token(t, s, _start));
+  _tokens.push_back(Token(t, s));
 }
 
 Scanner::Scanner(std::string source)
@@ -80,6 +80,6 @@ Scanner::scanTokens(void)
     _start = _curr;
     scanToken();
   }
-  _tokens.push_back(Token(EOL, "", _source.length()));
+  _tokens.push_back(Token(EOL, ""));
   return _tokens;
 }

@@ -9,8 +9,8 @@ class Scanner
 private:
   std::vector<Token> _tokens;
   std::string _source;
-  int _start;
-  int _curr;
+  unsigned long _start;
+  unsigned long _curr;
   bool isAtEnd(void);
   void scanToken(void);
   char advance(void);

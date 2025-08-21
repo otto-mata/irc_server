@@ -1,9 +1,7 @@
 #include "Token.hpp"
-#define ENUMSW(X) case X: t.assign(#X); break;
-Token::Token(TokenType type, std::string lexeme, int col)
+Token::Token(TokenType type, std::string lexeme)
   : _type(type)
   , _lex(lexeme)
-  , _col(col)
 {
 }
 
@@ -16,10 +14,12 @@ Token::toString(void)
 
   switch (_type)
   {
+#define ENUMSW(X) case X: t.assign(#X); break;
   ENUMSW(STRING)
   ENUMSW(COLON)
   ENUMSW(SPACE)
   ENUMSW(EOL)
+#undef ENUMSW
   }
   return  t + " " + _lex;
 }

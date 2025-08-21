@@ -8,9 +8,8 @@ class Token
   private:
     TokenType _type;
     std::string _lex;
-    int _col;
   public:
-    Token(TokenType type, std::string lexeme, int col);
+    Token(TokenType type, std::string lexeme);
     ~Token();
     std::string toString(void);
     TokenType getType(void);
