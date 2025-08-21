@@ -1,4 +1,7 @@
 .vscode
 a.out
 *.a
+*.o
+*.d
 build/
+ircserv
