@@ -38,10 +38,10 @@ $(NAME): $(OBJ)
 
 
 $(CMDPARSERDIR)/$(CMDPARSERLIB):
-	@make -C $(CMDPARSERDIR)
+	make -C $(CMDPARSERDIR)
 
 $(SCKTSERVDIR)/$(SCKTSERVLIB):
-	@make -C $(SCKTSERVDIR)
+	make -C $(SCKTSERVDIR)
 
 libcommandparser: $(CMDPARSERDIR)/$(CMDPARSERLIB)
 libsocketserver: $(SCKTSERVDIR)/$(SCKTSERVLIB)
@@ -64,6 +64,13 @@ fclean: clean
 	@printf " > Removed '$(NAME)'\n"
 
 re: fclean all
+
+
+re-cmdprsr:
+	make re -C $(CMDPARSERDIR)
+re-scktserv:
+	make re -C $(SCKTSERVDIR)
+re-all: re-cmdprsr re-scktserv re
 
 default: $(NAME)
 
