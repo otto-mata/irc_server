@@ -9,7 +9,14 @@ class IRCClient
 private:
   Client* socketClient;
   std::string _nickname;
+  std::string _realname;
+  std::string _hostname;
+  std::string _username;
   std::string _buffering;
+  
+  bool _isNew;
+
+
 
 public:
   IRCClient();

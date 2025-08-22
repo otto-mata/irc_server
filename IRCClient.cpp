@@ -7,7 +7,7 @@ IRCClient::IRCClient()
 
 
 IRCClient::IRCClient(Client& sockC)
-  : socketClient(&sockC)
+  : socketClient(&sockC), _isNew(true)
 {
 }
 
