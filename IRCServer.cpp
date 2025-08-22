@@ -55,8 +55,8 @@ IRCServer::onRequest(Request* req)
 void
 IRCServer::onClientDisconnect(Client& c)
 {
-  VClients::iterator itClient = std::find_if(
-    ircClients.begin(), ircClients.end(), client_by_fd(c.fileno()));
-  ircClients.erase(itClient);
+  std::map<int, IRCClient*>::iterator itClient = cMap.find(c.fileno());
+
+  cMap.erase(itClient);
   std::cout << "[*][SocketServer] Client disconnected." << std::endl;
 }
