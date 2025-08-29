@@ -1,0 +1,123 @@
+KICK
+
+if channel exists
+if target exists && in channel
+{
+	if user is admin
+	{
+		kick target
+		notify channel of kick
+	}
+}
+
+INVITE
+
+if channel exists
+if user is in channel
+if target exists && not in channel
+{
+	if channel is invite only
+	{
+		if user is admin
+		{
+			invite target to channel
+		} 
+	}
+	else
+	{
+		invite target to channel
+	}
+}
+
+TOPIC
+
+if channel exists
+{
+	if message
+	{
+		if channel topic is modifiable
+		{
+			modify topic
+		}
+		else
+		{
+			if user is admin
+			{
+				modify topic
+			}
+		}
+	}
+	else
+	{
+		show topic
+	}
+}
+
+MODE
+
+if channel exists
+user is admin
+{
+	bool set = true;
+	if (arg[0] != '+' || arg[0] != '-')
+	{
+		Error
+	}
+	if (arg[0] != '-')
+	{
+		set = false;
+	}
+	while (arg[i])
+	{
+		if (arg[i] == 'i')
+		{
+			channel.setInviteOnly(set);
+			continue ;
+		}
+		if (arg[i] == 't')
+		{
+			channel.getTopicModifiable(set);
+			continue ;
+		}
+		if (arg[i] == 'k')
+		{
+			if (set == true)
+			{
+				channel.activePassword(true)
+				channel.setPassword(nextTrailling)
+			}
+			else
+			{
+				channel.activePassword(false)
+			}
+			continue ;
+		}
+		if (arg[i] == 'o')
+		{
+			if (set == true)
+			{
+				channel.adminUser(nextTrailling)
+			}
+			else
+			{
+				channel.removeadminUser(nextTrailling)
+			}
+			continue ;
+		}
+		if (arg[i] == 'l')
+		{
+			verifier le nombre de user avant pour voir si erreur ou non?
+			if (set == true)
+			{
+				channel.setUserLimit(true)
+				channel.setUserLimitCount(nextTrailling)
+			}
+			else
+			{
+				channel.setUserLimit(false)
+			}
+			continue ;
+		}
+	}
+
+}
