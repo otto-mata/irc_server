@@ -2,18 +2,6 @@
 #include <algorithm>
 #include <iostream>
 #include <string>
-struct client_by_fd
-{
-public:
-  client_by_fd(int cfd)
-    : fd(cfd)
-  {
-  }
-  bool operator()(IRCClient const& c) { return c.fd() == fd; }
-
-private:
-  int fd;
-};
 
 IRCServer::IRCServer()
   : SocketServer(6667)
@@ -58,7 +46,7 @@ IRCServer::onClientDisconnect(Client& c)
   std::map<int, IRCClient*>::iterator itClient = cMap.find(c.fileno());
 
   cMap.erase(itClient);
-  std::cout << "[*][SocketServer] Client disconnected." << std::endl;
+  std::cout << "[*][IRCServer] Client disconnected." << std::endl;
 }
 
 void
@@ -93,7 +81,7 @@ IRCServer::addAdminToChannel(IRCClient* c, std::string& const channelName)
   if (_channels.find(channelName) == _channels.end()) {
     //! TODO: ERROR HANDLING
 
-    std::cout << "[!][IRCServer] Cannot add user to channel '" << channelName
+    std::cout << "[!][IRCServer] Cannot add admin to channel '" << channelName
               << "'. Channel doesn't exist." << std::endl;
     return;
   }
