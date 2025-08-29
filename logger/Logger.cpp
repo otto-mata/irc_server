@@ -4,11 +4,13 @@
 void
 Logging::Engine::_output(char const* const color,
                          const char* level,
-                         std::string& const m)
+                         std::string m)
 {
   std::cout << color << "[" + _name + "][" + level + "] " << m
             << Logging::Colors::Reset << std::endl;
 }
+
+Logging::Engine::~Engine(){}
 
 Logging::Engine::Engine()
   : _name("Log")

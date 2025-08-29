@@ -39,7 +39,7 @@ private:
   bool _fatalOccured;
   void _output(char const* const color,
                const char* level,
-               std::string& const m);
+               std::string m);
 
 public:
   Engine();
