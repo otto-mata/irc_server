@@ -39,21 +39,23 @@ private:
   bool _fatalOccured;
   void _output(char const* const color,
                const char* level,
-               std::string& const m);
+               std::string m);
 
 public:
   Engine();
-  Engine(std::string& const name);
-  Engine(std::string& const name, LogLevel level);
+  Engine(std::string name);
+  Engine(std::string name, LogLevel level);
+  Engine(char const* name);
+  Engine(char const* name, LogLevel level);
   ~Engine();
   bool fatalOccured(void) const;
   int warnings(void) const;
   int errors(void) const;
-  void fatal(std::string& const m);
-  void err(std::string& const m);
-  void warn(std::string& const m);
-  void log(std::string& const m);
-  void debug(std::string& const m);
+  void fatal(std::string m);
+  void err(std::string m);
+  void warn(std::string m);
+  void log(std::string m);
+  void debug(std::string m);
 };
 
 }
