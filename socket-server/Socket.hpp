@@ -22,11 +22,11 @@
 class SocketServer
 {
 private:
-  unsigned short port;
-  int fd;
-  SockAddrIn in;
-  bool mustStop;
-  Client clients[MAX_CLIENTS];
+  unsigned short _port;
+  int _fd;
+  SockAddrIn _in;
+  bool _mustStop;
+  Client _clients[MAX_CLIENTS];
 
 public:
   SocketServer(unsigned short serverPort);

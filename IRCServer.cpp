@@ -29,16 +29,16 @@ IRCServer::onRequest(Request* req)
     return (0);
 
   VClients::iterator itClient = std::find_if(
-    ircClients.begin(), ircClients.end(), client_by_fd(req->origin()));
-  if (itClient != ircClients.end() && req->size() == 0) {
+    _ircClients.begin(), _ircClients.end(), client_by_fd(req->origin()));
+  if (itClient != _ircClients.end() && req->size() == 0) {
     std::cout << "[*][IRCServer] Disconnected client" << std::endl;
-    ircClients.erase(itClient);
+    _ircClients.erase(itClient);
   }
-  if (itClient == ircClients.end()) {
+  if (itClient == _ircClients.end()) {
     std::cout << "[+][IRCServer] New client" << std::endl;
     Client& c = clientByFileno(req->origin());
-    ircClients.push_back(IRCClient(c));
-    itClient = ircClients.end() - 1;
+    _ircClients.push_back(IRCClient(c));
+    itClient = _ircClients.end() - 1;
   }
   std::string reqBody(req->raw());
   itClient->addToBuffer(reqBody);
@@ -55,7 +55,7 @@ void
 IRCServer::onClientDisconnect(Client& c)
 {
   VClients::iterator itClient = std::find_if(
-    ircClients.begin(), ircClients.end(), client_by_fd(c.fileno()));
-  ircClients.erase(itClient);
+    _ircClients.begin(), _ircClients.end(), client_by_fd(c.fileno()));
+  _ircClients.erase(itClient);
   std::cout << "[*][SocketServer] Client disconnected." << std::endl;
 }

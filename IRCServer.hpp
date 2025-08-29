@@ -11,7 +11,7 @@ typedef std::vector<IRCClient> VClients;
 class IRCServer : public SocketServer
 {
 private:
-  std::vector<IRCClient> ircClients;
+  std::vector<IRCClient> _ircClients;
 public:
   IRCServer(/* args */);
   ~IRCServer();

@@ -3,31 +3,31 @@
 Command::Command(std::vector<Token>& tv)
 {
   size_t i = 0;
-  source = 0;
-  params = 0;
-  trailing = 0;
-  cmd.assign("");
+  _source = 0;
+  _params = 0;
+  _trailing = 0;
+  _cmd.assign("");
   for (std::vector<Token>::iterator it = tv.begin(); it < tv.end(); it++) {
     if (it->getType() == SPACE)
       continue;
     if (i == 0 && it->getType() == COLON)
-      source = new std::string((++it)->getLexeme());
-    else if ((i == 0 || i == 1) && it->getType() == STRING && cmd.length() == 0) {
-      cmd = it->getLexeme();
+      _source = new std::string((++it)->getLexeme());
+    else if ((i == 0 || i == 1) && it->getType() == STRING && _cmd.length() == 0) {
+      _cmd = it->getLexeme();
     } else if (it->getType() == COLON) {
-      trailing = new std::string();
+      _trailing = new std::string();
       while (it < tv.end()) {
         if (it->getType() == STRING)
-          trailing->append(it->getLexeme());
+          _trailing->append(it->getLexeme());
         else if (it->getType() == SPACE)
-          trailing->append(" ");
+          _trailing->append(" ");
         it++;
       }
     } else if (it->getType() != EOL){
-      if (!params)
-        params = new std::vector<std::string>();
+      if (!_params)
+        _params = new std::vector<std::string>();
       if (it->getType() == STRING)
-        params->push_back(it->getLexeme());
+        _params->push_back(it->getLexeme());
     }
     i++;
   }
@@ -35,12 +35,12 @@ Command::Command(std::vector<Token>& tv)
 
 Command::~Command()
 {
-  if (source)
-    delete source;
-  if (params)
-    delete params;
-  if (trailing)
-    delete trailing;
+  if (_source)
+    delete _source;
+  if (_params)
+    delete _params;
+  if (_trailing)
+    delete _trailing;
 }
 
 std::string
@@ -48,23 +48,23 @@ Command::toString(void)
 {
   std::string s;
 
-  s = "COMMAND: " + cmd + "\n";
-  if (params) {
+  s = "COMMAND: " + _cmd + "\n";
+  if (_params) {
     s += "PARAMS: [";
-    for (std::vector<std::string>::iterator it = params->begin();
-         it < params->end();
+    for (std::vector<std::string>::iterator it = _params->begin();
+         it < _params->end();
          it++) {
       s += *it;
-      if (it < params->end() - 1)
+      if (it < _params->end() - 1)
         s += ", ";
     }
     s += "]\n";
   }
-  if (source) {
-    s += "SOURCE: " + *source + "\n";
+  if (_source) {
+    s += "SOURCE: " + *_source + "\n";
   }
-  if (trailing) {
-    s += "TRAILING: " + *trailing + "\n";
+  if (_trailing) {
+    s += "TRAILING: " + *_trailing + "\n";
   }
   return s;
 }

@@ -12,37 +12,37 @@ struct Response
 {
 public:
   Response()
-    : body("")
+    : _body("")
   {
   }
-  Response(std::string _body)
-    : body(_body)
+  Response(std::string body)
+    : _body(body)
   {
   }
-  size_t size(void) { return body.size(); }
-  char const * raw(void) { return body.c_str(); }
+  size_t size(void) { return _body.size(); }
+  char const * raw(void) { return _body.c_str(); }
 
 private:
-  std::string body;
+  std::string _body;
 };
 
 struct Request
 {
 public:
-  Request(int _fd)
-    : body(""), fd(_fd)
+  Request(int fd)
+    : _body(""), _fd(fd)
   {
   }
-  Request(std::string _body, int _fd)
-    : body(_body), fd(_fd)
+  Request(std::string body, int fd)
+    : _body(body), _fd(fd)
   {
   }
-  size_t size(void) { return body.size(); }
-  char const * raw(void) { return body.c_str(); }
-  int origin(void) {return (fd);}
+  size_t size(void) { return _body.size(); }
+  char const * raw(void) { return _body.c_str(); }
+  int origin(void) {return (_fd);}
 private:
-  std::string body;
-  int fd;
+  std::string _body;
+  int _fd;
 };
 
 #endif

@@ -7,7 +7,7 @@
 class IRCClient
 {
 private:
-  Client* socketClient;
+  Client* _socketClient;
   std::string _nickname;
   std::string _buffering;
 

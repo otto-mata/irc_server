@@ -11,39 +11,39 @@
 
 SocketServer::SocketServer(unsigned short serverPort)
 {
-  port = htons(serverPort);
-  fd = socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
-  if (fd < 0)
+  _port = htons(serverPort);
+  _fd = socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
+  if (_fd < 0)
     throw std::exception();
   int optValue = 1;
-  if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &optValue, sizeof(optValue)) <
+  if (setsockopt(_fd, SOL_SOCKET, SO_REUSEADDR, &optValue, sizeof(optValue)) <
       0) {
     perror("SocketServer::init - setsockopt");
-    close(fd);
+    close(_fd);
     throw std::exception();
   }
-  ::memset(&in, 0, sizeof(in));
-  in.sin_addr.s_addr = INADDR_ANY;
-  in.sin_port = port;
-  in.sin_family = AF_INET;
-  if (bind(fd, (struct sockaddr*)&in, sizeof(in)) < 0) {
+  ::memset(&_in, 0, sizeof(_in));
+  _in.sin_addr.s_addr = INADDR_ANY;
+  _in.sin_port = _port;
+  _in.sin_family = AF_INET;
+  if (bind(_fd, (struct sockaddr*)&_in, sizeof(_in)) < 0) {
     perror("SocketServer::init - bind");
-    close(fd);
+    close(_fd);
     throw std::exception();
   }
-  if (listen(fd, BACKLOG) < 0) {
+  if (listen(_fd, BACKLOG) < 0) {
     perror("SocketServer::init - listen");
-    close(fd);
+    close(_fd);
     throw std::exception();
   }
-  mustStop = false;
+  _mustStop = false;
   std::cout << "Server started on port " << serverPort << "." << std::endl;
 }
 
 SocketServer::~SocketServer()
 {
   std::cout << "Shutting down server..." << std::endl;
-  close(fd);
+  close(_fd);
   std::cout << "Server shut down successfully." << std::endl;
 }
 
@@ -60,8 +60,8 @@ Client&
 SocketServer::clientByFileno(int fd)
 {
   for (size_t i = 0; i < MAX_CLIENTS; i++) {
-    if (clients[i].fileno() == fd)
-      return (clients[i]);
+    if (_clients[i].fileno() == fd)
+      return (_clients[i]);
   }
   throw SocketServer::ClientNotFound();
 }
@@ -80,15 +80,15 @@ SocketServer::serve(void)
   int fdmax;
   socklen_t slen = sizeof(client);
 
-  while (!mustStop) {
+  while (!_mustStop) {
     FD_ZERO(&rfds);
     FD_ZERO(&wfds);
 
-    FD_SET(fd, &rfds);
-    fdmax = fd;
+    FD_SET(_fd, &rfds);
+    fdmax = _fd;
 
     for (int i = 0; i < MAX_CLIENTS; ++i) {
-      Client& c = clients[i];
+      Client& c = _clients[i];
 
       if (c.fileno() >= 0) {
         FD_SET(c.fileno(), &rfds);
@@ -105,8 +105,8 @@ SocketServer::serve(void)
       return;
     }
 
-    if (FD_ISSET(fd, &rfds)) {
-      cfd = accept(fd, (struct sockaddr*)&client, &slen);
+    if (FD_ISSET(_fd, &rfds)) {
+      cfd = accept(_fd, (struct sockaddr*)&client, &slen);
       if (cfd < 0) {
         perror("SocketServer::serve - accept");
         return;
@@ -114,20 +114,20 @@ SocketServer::serve(void)
       std::cerr << "[+][SocketServer] New client connected on fd " << cfd
                 << std::endl;
       for (int i = 0; i < MAX_CLIENTS; i++) {
-        if (clients[i].fileno() == -1) {
-          clients[i].setfileno(cfd);
-          clients[i].setoutsz(0);
+        if (_clients[i].fileno() == -1) {
+          _clients[i].setfileno(cfd);
+          _clients[i].setoutsz(0);
           break;
         }
       }
     }
 
     for (int i = 0; i < MAX_CLIENTS; ++i) {
-      Client& c = clients[i];
+      Client& c = _clients[i];
       // int clientFd = c.fileno();
       if (c.fileno() > -1 && FD_ISSET(c.fileno(), &rfds)) {
         std::cerr << "[+][SocketServer] Received data from client #"
-                  << c.fileno() - fd << std::endl;
+                  << c.fileno() - _fd << std::endl;
         Request* req = c.receive();
         if (!req) {
           onClientDisconnect(c);
@@ -136,6 +136,10 @@ SocketServer::serve(void)
         }
         Response* res = onRequest(req);
         c.setRes(res);
+        // Nahla's notes : ici je peine a comprendre pourquoi separer en deux struct differentes et faire la lecture dans un autre if que celui de la l'ecriture
+        // Si il n'y a pas de request, alors pas de response. On pourrais se dire "oui mais si le fd n'est pas en lecture a ce moment mais qu'il le deviens entre les deux"
+        // Premierement : Dans quel cas ca pourrais arriver ? Deuxiemement : Dans ce cas, si une deuxieme requete etaisintercepter pendant ce laps de temps. onperdrais la premiere non ?
+        // on pourais simplement faire un "onRequest" sur une string ? ou biens si on a peur de ne pas pouvoir ecrire il faudrais creer un array pour pouvoir ecrire toutes les reponses en attentes a la suite.
       }
       if (c.fileno() > -1 && FD_ISSET(c.fileno(), &wfds)) {
         if (c.respond() == 0) {

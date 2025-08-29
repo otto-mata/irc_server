@@ -7,75 +7,75 @@
 
 Client::Client(void)
 {
-  fd = -1;
-  outlen = 0;
-  mustSend = 0;
-  disconnected = true;
-  ::memset(buffer, 0, PKT_SIZE + 1);
-  ::memset(rbuffer, 0, PKT_SIZE + 1);
+  _fd = -1;
+  _outlen = 0;
+  _mustSend = 0;
+  _disconnected = true;
+  ::memset(_buffer, 0, PKT_SIZE + 1);
+  ::memset(_rbuffer, 0, PKT_SIZE + 1);
 }
 
 Client::~Client()
 {
-  if (fd > 0)
-    close(fd);
+  if (_fd > 0)
+    close(_fd);
 }
 
 int
 Client::fileno(void)
 {
-  return (fd);
+  return (_fd);
 }
 
 void
-Client::setfileno(int _fd)
+Client::setfileno(int fd)
 {
-  fd = _fd;
+  _fd = fd;
 }
 
 size_t
 Client::outsz(void)
 {
-  return outlen;
+  return _outlen;
 }
 
 void
 Client::setoutsz(size_t n)
 {
-  outlen = n;
+  _outlen = n;
 }
 
 void
 Client::reset(void)
 {
-  close(fd);
-  fd = -1;
-  outlen = 0;
-  disconnected = true;
-  ::memset(buffer, 0, PKT_SIZE + 1);
-  ::memset(rbuffer, 0, PKT_SIZE + 1);
+  close(_fd);
+  _fd = -1;
+  _outlen = 0;
+  _disconnected = true;
+  ::memset(_buffer, 0, PKT_SIZE + 1);
+  ::memset(_rbuffer, 0, PKT_SIZE + 1);
 }
 
 Request*
 Client::receive(void)
 {
-  ssize_t n = recv(fd, buffer, PKT_SIZE, 0);
+  ssize_t n = recv(_fd, _buffer, PKT_SIZE, 0);
   if (n <= 0) {
     if (n == 0)
       return (0);
     else
       perror("ServerSocket::Client::receive - recv");
   }
-  outlen = n;
-  return (new Request(std::string(buffer), fileno()));
+  _outlen = n;
+  return (new Request(std::string(_buffer), fileno()));
 }
 
 ssize_t
 Client::respond(void)
 {
   ssize_t n = -1;
-  if (mustSend) {
-    n = send(fd, rbuffer, PKT_SIZE, 0);
+  if (_mustSend) {
+    n = send(_fd, _rbuffer, PKT_SIZE, 0);
     if (n <= 0) {
       if (n == 0)
         return (0);
@@ -83,36 +83,36 @@ Client::respond(void)
         perror("ServerSocket::Client::respond - send");
       reset();
     }
-    delete res;
+    delete _res;
 
-    std::cerr << "[+][Client] Sending data to client on fd " << fd << std::endl;
-    res = 0;
-    mustSend = 0;
+    std::cerr << "[+][Client] Sending data to client on fd " << _fd << std::endl;
+    _res = 0;
+    _mustSend = 0;
   }
   return (n);
 }
 
 void
-Client::setRes(Response* _res)
+Client::setRes(Response* res)
 {
-  res = _res;
-  mustSend = 0;
-  if (_res) {
-    outlen = _res->size();
-    ::memset(rbuffer, 0, PKT_SIZE);
-    ::memcpy(rbuffer, res->raw(), outlen);
-    mustSend = 1;
+  _res = res;
+  _mustSend = 0;
+  if (res) {
+    _outlen = res->size();
+    ::memset(_rbuffer, 0, PKT_SIZE);
+    ::memcpy(_rbuffer, _res->raw(), _outlen);
+    _mustSend = 1;
   }
 }
 
 bool
 Client::connected(void)
 {
-  return !disconnected;
+  return !_disconnected;
 }
 
 bool
 Client::connected(void) const
 {
-  return !disconnected;
+  return !_disconnected;
 }
