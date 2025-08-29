@@ -23,9 +23,9 @@ public:
   ~IRCServer();
   virtual Response* onRequest(Request* req);
   virtual void onClientDisconnect(Client& c);
-  void createChannel(std::string& const channelName);
-  void addUserToChannel(IRCClient* c, std::string& const channelName);
-  void addAdminToChannel(IRCClient* c, std::string& const channelName);
+  void createChannel(std::string channelName);
+  void addUserToChannel(IRCClient* c, std::string channelName);
+  void addAdminToChannel(IRCClient* c, std::string channelName);
 };
 
 #endif

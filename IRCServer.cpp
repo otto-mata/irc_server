@@ -51,7 +51,7 @@ IRCServer::onClientDisconnect(Client& c)
 }
 
 void
-IRCServer::createChannel(std::string& const channelName)
+IRCServer::createChannel(std::string channelName)
 {
   if (_channels.find(channelName) != _channels.end()) {
     //! TODO: ERROR HANDLING
@@ -64,7 +64,7 @@ IRCServer::createChannel(std::string& const channelName)
 }
 
 void
-IRCServer::addUserToChannel(IRCClient* c, std::string& const channelName)
+IRCServer::addUserToChannel(IRCClient* c, std::string channelName)
 {
   if (_channels.find(channelName) == _channels.end()) {
     //! TODO: ERROR HANDLING
@@ -77,7 +77,7 @@ IRCServer::addUserToChannel(IRCClient* c, std::string& const channelName)
 }
 
 void
-IRCServer::addAdminToChannel(IRCClient* c, std::string& const channelName)
+IRCServer::addAdminToChannel(IRCClient* c, std::string channelName)
 {
   if (_channels.find(channelName) == _channels.end()) {
     //! TODO: ERROR HANDLING
