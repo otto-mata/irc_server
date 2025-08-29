@@ -28,23 +28,24 @@ IRCServer::onRequest(Request* req)
   if (!req)
     return (0);
 
-  VClients::iterator itClient = std::find_if(
-    ircClients.begin(), ircClients.end(), client_by_fd(req->origin()));
-  if (itClient != ircClients.end() && req->size() == 0) {
+  std::map<int, IRCClient*>::iterator itClient = cMap.find(req->origin());
+  IRCClient* user;
+
+  if (itClient != cMap.end() && req->size() == 0) {
     std::cout << "[*][IRCServer] Disconnected client" << std::endl;
-    ircClients.erase(itClient);
-  }
-  if (itClient == ircClients.end()) {
+    cMap.erase(itClient);
+    return 0;
+  } else if (itClient == cMap.end()) {
     std::cout << "[+][IRCServer] New client" << std::endl;
     Client& c = clientByFileno(req->origin());
-    ircClients.push_back(IRCClient(c));
-    itClient = ircClients.end() - 1;
+    cMap[req->origin()] = new IRCClient(c);
   }
+  user = cMap[req->origin()];
   std::string reqBody(req->raw());
-  itClient->addToBuffer(reqBody);
-  std::cout << itClient->getBuffer() << std::endl; 
-  if (itClient->bufferReady()) {
-    if (itClient->getBuffer() == "PING\r\n")
+  user->addToBuffer(reqBody);
+  std::cout << user->getBuffer() << std::endl;
+  if (user->bufferReady()) {
+    if (user->getBuffer() == "PING\r\n")
       return new Response("PONG\r\n");
   }
 
@@ -54,8 +55,8 @@ IRCServer::onRequest(Request* req)
 void
 IRCServer::onClientDisconnect(Client& c)
 {
-  VClients::iterator itClient = std::find_if(
-    ircClients.begin(), ircClients.end(), client_by_fd(c.fileno()));
-  ircClients.erase(itClient);
+  std::map<int, IRCClient*>::iterator itClient = cMap.find(c.fileno());
+
+  cMap.erase(itClient);
   std::cout << "[*][SocketServer] Client disconnected." << std::endl;
 }
