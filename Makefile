@@ -11,10 +11,11 @@ SCKTSERVDIR=./socket-server
 LOGLIB=liblogger.a
 LOGDIR=./logger
 
-LIBS=-L$(CMDPARSERDIR) -L$(SCKTSERVDIR) -lcommandparser -lsocketserver
+LIBS=-L$(CMDPARSERDIR) -L$(SCKTSERVDIR) -L$(LOGDIR) -lcommandparser -lsocketserver -llogger
 
 SRC=IRCServer.cpp\
 	IRCClient.cpp\
+	IRCChannel.cpp\
 	main.cpp
 OBJDIR=./build
 OBJ=$(addprefix $(OBJDIR)/,$(SRC:.cpp=.o))
@@ -30,7 +31,6 @@ endif
 ifeq ($(STRICT), 1)
 CXXFLAGS += -Werror -pedantic
 endif
-
 
 all: libcommandparser libsocketserver liblogger $(NAME)
 
@@ -50,7 +50,7 @@ $(LOGDIR)/$(LOGLIB):
 
 libcommandparser: $(CMDPARSERDIR)/$(CMDPARSERLIB)
 libsocketserver: $(SCKTSERVDIR)/$(SCKTSERVLIB)
-liblogger: $(SCKTSERVDIR)/$(SCKTSERVLIB)
+liblogger: $(LOGDIR)/$(LOGLIB)
 
 -include $(OBJ:.o=.d)
 
@@ -69,13 +69,23 @@ fclean: clean
 	@rm -f $(NAME)
 	@printf " > Removed '$(NAME)'\n"
 
+wipe: fclean
+	make fclean -C $(CMDPARSERDIR)
+	make fclean -C $(SCKTSERVDIR)
+	make fclean -C $(LOGDIR)
+
 re: fclean all
 
 
 re-cmdprsr:
 	make re -C $(CMDPARSERDIR)
+
 re-scktserv:
 	make re -C $(SCKTSERVDIR)
+
+
+re-logger:
+	make re -C $(LOGDIR)
 
 re-all: re-cmdprsr re-scktserv re
 
