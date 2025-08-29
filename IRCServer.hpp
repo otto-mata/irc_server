@@ -16,9 +16,6 @@ private:
   std::map<int, IRCClient*> cMap;
   std::map<std::string, IRCChannel> _channels;
 
-  std::map<int, IRCClient*> cMap;
-  std::map<std::string, IRCChannel> _channels;
-
 public:
   IRCServer(/* args */);
   ~IRCServer();
