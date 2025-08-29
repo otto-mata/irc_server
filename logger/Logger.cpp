@@ -37,6 +37,22 @@ Logging::Engine::Engine(std::string& const name, LogLevel level)
 {
 }
 
+Logging::Engine::Engine(char const* name) 
+  : _name(name)
+  , _level(INFO)
+  , _warnCount(0)
+  , _errCount(0)
+  , _fatalOccured(false)
+{
+}
+Logging::Engine::Engine(char const* name, LogLevel level)
+  : _name(name)
+  , _level(level)
+  , _warnCount(0)
+  , _errCount(0)
+  , _fatalOccured(false)
+{
+}
 bool
 Logging::Engine::fatalOccured(void) const
 {
@@ -56,34 +72,34 @@ Logging::Engine::errors(void) const
 }
 
 void
-Logging::Engine::fatal(std::string& const m)
+Logging::Engine::fatal(std::string m)
 {
   _output(Colors::Red, "FATAL", m);
   _fatalOccured = true;
 }
 
 void
-Logging::Engine::err(std::string& const m)
+Logging::Engine::err(std::string m)
 {
   _output(Colors::Red, "ERROR", m);
   _errCount++;
 }
 
 void
-Logging::Engine::warn(std::string& const m)
+Logging::Engine::warn(std::string m)
 {
   _output(Colors::Gold, "WARNING", m);
   _warnCount++;
 }
 
 void
-Logging::Engine::log(std::string& const m)
+Logging::Engine::log(std::string m)
 {
   _output(Colors::White, "INFO", m);
 }
 
 void
-Logging::Engine::debug(std::string& const m)
+Logging::Engine::debug(std::string m)
 {
   _output(Colors::Yellow, "DEBUG", m);
 }
