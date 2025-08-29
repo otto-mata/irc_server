@@ -43,8 +43,8 @@ private:
 
 public:
   Engine();
-  Engine(std::string& const name);
-  Engine(std::string& const name, LogLevel level);
+  Engine(std::string name);
+  Engine(std::string name, LogLevel level);
   Engine(char const* name);
   Engine(char const* name, LogLevel level);
   ~Engine();

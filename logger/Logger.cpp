@@ -19,7 +19,7 @@ Logging::Engine::Engine()
 {
 }
 
-Logging::Engine::Engine(std::string& const name)
+Logging::Engine::Engine(std::string name)
   : _name(name)
   , _level(INFO)
   , _warnCount(0)
@@ -28,7 +28,7 @@ Logging::Engine::Engine(std::string& const name)
 {
 }
 
-Logging::Engine::Engine(std::string& const name, LogLevel level)
+Logging::Engine::Engine(std::string name, LogLevel level)
   : _name(name)
   , _level(level)
   , _warnCount(0)
