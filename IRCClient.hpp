@@ -17,6 +17,9 @@ public:
   IRCClient(IRCClient const& other);
   IRCClient& operator=(IRCClient const& other);
   ~IRCClient();
+  Client* get_socketClient();
+  std::string get_nickname();
+  std::string get_buffering();
   int fd(void);
   int fd(void) const;
   bool connected(void);

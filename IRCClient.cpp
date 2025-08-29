@@ -32,6 +32,21 @@ IRCClient::fd(void)
     return -1;
 }
 
+Client* IRCClient::get_socketClient()
+{
+	return (socketClient);
+}
+
+std::string IRCClient::get_nickname()
+{
+	return (_nickname);
+}
+
+std::string IRCClient::get_buffering()
+{
+	return (_buffering);
+}
+
 int
 IRCClient::fd(void) const
 {
