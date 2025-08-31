@@ -5,15 +5,20 @@
 
 class Command
 {
-private:
-  std::string* source;
-  std::string cmd;
-  std::vector<std::string>* params;
-  std::string* trailing;
-public:
-  Command(std::vector<Token>& tv);
-  ~Command();
-  std::string toString(void);
+	private:
+		std::string _source;
+		std::string _cmd;
+		std::vector<std::string> _params;
+		std::string _trailing;
+	public:
+		Command(std::vector<Token>& tv);
+		~Command();
+		void executeCmd(void);
+
+		std::string getSource();
+		std::string getCommand();
+		std::vector<std::string> getParams();
+		std::string getTrailing();
 };
 
 #endif
