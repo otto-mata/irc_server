@@ -2,69 +2,82 @@
 
 Command::Command(std::vector<Token>& tv)
 {
-  size_t i = 0;
-  source = 0;
-  params = 0;
-  trailing = 0;
-  cmd.assign("");
-  for (std::vector<Token>::iterator it = tv.begin(); it < tv.end(); it++) {
-    if (it->getType() == SPACE)
-      continue;
-    if (i == 0 && it->getType() == COLON)
-      source = new std::string((++it)->getLexeme());
-    else if ((i == 0 || i == 1) && it->getType() == STRING && cmd.length() == 0) {
-      cmd = it->getLexeme();
-    } else if (it->getType() == COLON) {
-      trailing = new std::string();
-      while (it < tv.end()) {
-        if (it->getType() == STRING)
-          trailing->append(it->getLexeme());
-        else if (it->getType() == SPACE)
-          trailing->append(" ");
-        it++;
-      }
-    } else if (it->getType() != EOL){
-      if (!params)
-        params = new std::vector<std::string>();
-      if (it->getType() == STRING)
-        params->push_back(it->getLexeme());
-    }
-    i++;
-  }
+	size_t i = 0;
+
+	_cmd = "";
+	_source = "";
+	_trailing = "";
+	_params.clear();
+
+	std::vector<Token>::iterator it = tv.begin();
+	while (it != tv.end())
+	{
+		if (it->getType() == SPACE) {
+			++it;
+			continue;
+		}
+
+		// Source
+		if (i == 0 && it->getType() == COLON)
+		{
+			++it;
+			if (it != tv.end())
+				_source = it->getLexeme();
+		}
+		// Commande
+		else if ((i == 0 || i == 1) && it->getType() == STRING && _cmd.length() == 0)
+		{
+			_cmd = it->getLexeme();
+		}
+		// Trailing
+		else if (it->getType() == COLON)
+		{
+			++it;
+			while (it != tv.end())
+			{
+				if (it->getType() == STRING)
+					_trailing += it->getLexeme();
+				else if (it->getType() == SPACE)
+					_trailing += " ";
+				++it;
+			}
+			break;
+		}
+		// Params
+		else if (it->getType() != EOL)
+		{
+			if (it->getType() == STRING)
+				_params.push_back(it->getLexeme());
+		}
+
+		++it;
+		++i;
+	}
 }
 
-Command::~Command()
+Command::~Command() {}
+
+std::string Command::getSource()
 {
-  if (source)
-    delete source;
-  if (params)
-    delete params;
-  if (trailing)
-    delete trailing;
+	return _source;
 }
 
-std::string
-Command::toString(void)
+std::string Command::getSource()
 {
-  std::string s;
+	return _cmd;
+}
 
-  s = "COMMAND: " + cmd + "\n";
-  if (params) {
-    s += "PARAMS: [";
-    for (std::vector<std::string>::iterator it = params->begin();
-         it < params->end();
-         it++) {
-      s += *it;
-      if (it < params->end() - 1)
-        s += ", ";
-    }
-    s += "]\n";
-  }
-  if (source) {
-    s += "SOURCE: " + *source + "\n";
-  }
-  if (trailing) {
-    s += "TRAILING: " + *trailing + "\n";
-  }
-  return s;
+std::vector<std::string> Command::getParams()
+{
+	return _params;
+}
+
+std::string Command::getTrailing()
+{
+	return _trailing;
+}
+
+void Command::executeCmd(void)
+{
+
 }
