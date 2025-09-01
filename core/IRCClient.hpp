@@ -1,6 +1,6 @@
 #ifndef IRCCLIENT_HPP
 #define IRCCLIENT_HPP
-#include "socket-server/Client.hpp"
+#include "../socket-server/Client.hpp"
 #include <string>
 #include <sstream>
 

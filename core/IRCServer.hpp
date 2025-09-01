@@ -1,7 +1,7 @@
 #ifndef IRCSERVER_HPP
 #define IRCSERVER_HPP
 
-#include "socket-server/Socket.hpp"
+#include "../socket-server/Socket.hpp"
 #include "IRCClient.hpp"
 #include <vector>
 #include <map>
