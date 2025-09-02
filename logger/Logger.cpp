@@ -28,14 +28,6 @@ Logging::Engine::Engine(std::string name)
 {
 }
 
-Logging::Engine::Engine(std::string name, LogLevel level)
-  : _name(name)
-  , _warnCount(0)
-  , _errCount(0)
-  , _fatalOccured(false)
-{
-}
-
 Logging::Engine::Engine(char const* name) 
   : _name(name)
   , _warnCount(0)
@@ -43,13 +35,7 @@ Logging::Engine::Engine(char const* name)
   , _fatalOccured(false)
 {
 }
-Logging::Engine::Engine(char const* name, LogLevel level)
-  : _name(name)
-  , _warnCount(0)
-  , _errCount(0)
-  , _fatalOccured(false)
-{
-}
+
 bool
 Logging::Engine::fatalOccured(void) const
 {
