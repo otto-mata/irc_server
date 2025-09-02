@@ -1,177 +1,172 @@
 #include "IRCChannel.hpp"
 
-IRCChannel::IRCChannel()
-  : _name("unnamed_channel")
-{
-}
+IRCChannel::IRCChannel() : _name(DEFAULT_NAME), _topic(DEFAULT_TOPIC),
+_userLimitCount(DEFAULT_USER_LIMIT_COUNT), _inviteOnly(DEFAULT_INVITE_ONLY),
+_topicModifiable(DEFAULT__TOPIC_MODIFIABLE), _userLimit(DEFAULT__USER_LIMIT){}
 
-IRCChannel::IRCChannel(std::string channel_name)
-  : _name(channel_name)
-{
-}
+IRCChannel::IRCChannel(std::string channel_name)  : _name(channel_name), _topic(DEFAULT_TOPIC),
+_userLimitCount(DEFAULT_USER_LIMIT_COUNT), _inviteOnly(DEFAULT_INVITE_ONLY),
+_topicModifiable(DEFAULT__TOPIC_MODIFIABLE), _userLimit(DEFAULT__USER_LIMIT) {}
 
-IRCChannel::IRCChannel(const IRCChannel& other)
-{
-  *this = other;
-}
+IRCChannel::IRCChannel(const IRCChannel& other) {*this = other;}
 
-IRCChannel&
-IRCChannel::operator=(const IRCChannel& other)
+IRCChannel& IRCChannel::operator=(const IRCChannel& other)
 {
-  if (this != &other) {
-    this->_name = other._name;
-    this->_users = other._users;
-  }
-  return *this;
+	if (this != &other)
+	{
+		this->_name = other._name + "_copy";
+		//verifier si le nom existe deja
+		this->_users = other._users;
+		this->_admins = other._admins;
+		this->_topic = other._topic;
+		this->_userLimitCount = other._userLimitCount;
+		this->_inviteOnly = other._inviteOnly;
+		this->_topicModifiable = other._topicModifiable;
+		this->_userLimit = other._userLimit;
+	}
+	return *this;
 }
 
 IRCChannel::~IRCChannel() {}
 
-std::string
-IRCChannel::getTopic() const
+std::string IRCChannel::getName()
 {
-  return _topic;
+	return _name;
 }
 
-size_t
-IRCChannel::getMaxUsers() const
+std::set<IRCClient*> IRCChannel::getUserList()
 {
-  return _maxUsers;
+	return _users;
 }
 
-IRCClient
-IRCChannel::getOwner() const
+IRCClient* IRCChannel::getUser(std::string user_name)
 {
-  return *_owner;
+	// return user with name
 }
 
-std::set<IRCClient*>
-IRCChannel::getGuests() const
+std::set<IRCClient*> IRCChannel::getAdminList()
 {
-  return _guests;
+	return _admins;
 }
 
-std::string
-IRCChannel::getPassword() const
+IRCClient* getAdmin(std::string admin_name)
 {
-  return _password;
+	// return admin with name
 }
 
-bool
-IRCChannel::isUserInChannel(IRCClient* user) const
+std::string IRCChannel::getTopic()
 {
-  return _users.find(user) != _users.end();
+	return _topic;
 }
 
-bool
-IRCChannel::isInviteOnly() const
+int IRCChannel::getUserLimitCount()
 {
-  return _inviteOnly;
+	return _userLimitCount;
 }
 
-bool
-IRCChannel::isProtectedTopic() const
+bool IRCChannel::getInviteOnly()
 {
-  return _protectedTopic;
+	return _inviteOnly;
 }
 
-std::string
-IRCChannel::getName()
+bool IRCChannel::getTopicModifiable()
 {
-  return _name;
+	return _topicModifiable;
 }
 
-std::set<IRCClient*>
-IRCChannel::getUserList()
+bool IRCChannel::getUserLimit()
 {
-  return _users;
+	return _userLimit;
 }
 
-IRCClient*
-IRCChannel::getUser(std::string user_name)
+void IRCChannel::setTopic(std::string NewTopic)
 {
-  // return user with name
+	_topic = NewTopic;
 }
 
-std::set<IRCClient*>
-IRCChannel::getAdminList()
+void IRCChannel::setUserLimitCount(int NewUserLimit)
 {
-  return _admins;
+	_userLimit = NewUserLimit;
 }
 
-IRCClient*
-getAdmin(std::string admin_name)
+void IRCChannel::setInviteOnly(bool info)
 {
-  // return admin with name
+	_inviteOnly = info;
 }
 
-bool
-IRCChannel::isUser(IRCClient* user_tofind)
+void IRCChannel::setTopicModifiable(bool info)
 {
-  return _users.find(user_tofind) != _users.end();
+	_topicModifiable = info;
 }
 
-bool
-IRCChannel::isUser(int user_tofind)
+void IRCChannel::setUserLimit(bool info)
 {
-  // check with id
+	_userLimit = info;
 }
 
-bool
-IRCChannel::isUser(std::string user_tofind)
+
+bool IRCChannel::isUser(IRCClient* user_tofind)
 {
-  // check with name
+	return _users.find(user_tofind) != _users.end();
 }
 
-bool
-IRCChannel::isAdmin(IRCClient* admin_tofind)
+bool IRCChannel::isUser(int user_tofind)
 {
-  return _admins.find(admin_tofind) != _admins.end();
+	//check with id
 }
 
-bool
-IRCChannel::isAdmin(int admin_tofind)
+bool IRCChannel::isUser(std::string user_tofind)
 {
-  // check with id
+	//check with name
 }
 
-bool
-IRCChannel::isAdmin(std::string admin_tofind)
+bool IRCChannel::isAdmin(IRCClient* admin_tofind)
 {
-  // check with name
+	return _admins.find(admin_tofind) != _admins.end();
 }
 
-void
-IRCChannel::addUser(IRCClient* user_toadd)
+bool IRCChannel::isAdmin(int admin_tofind)
 {
-  if (!isUser(user_toadd)) {
-    _users.insert(user_toadd);
-  }
+	//check with id
 }
 
-void
-IRCChannel::removeUser(IRCClient* user_toremove)
+bool IRCChannel::isAdmin(std::string admin_tofind)
 {
-  if (isAdmin(user_toremove)) {
-    _admins.erase(user_toremove);
-  }
-  if (isUser(user_toremove)) {
-    _users.erase(user_toremove);
-  }
+	//check with name
 }
 
-void
-IRCChannel::adminUser(IRCClient* admin_toadd)
+void IRCChannel::addUser(IRCClient* user_toadd)
 {
-  if (isUser(admin_toadd) && !isAdmin(admin_toadd)) {
-    _admins.insert(admin_toadd);
-  }
+	if (!isUser(user_toadd))
+	{
+		_users.insert(user_toadd);
+	}
 }
 
-void
-IRCChannel::removeadminUser(IRCClient* admin_toremove)
+void IRCChannel::removeUser(IRCClient* user_toremove)
 {
-  if (isAdmin(admin_toremove)) {
-    _admins.erase(admin_toremove);
-  }
+	if (isAdmin(user_toremove))
+	{
+		_admins.erase(user_toremove);
+	}
+	if (isUser(user_toremove))
+	{
+		_users.erase(user_toremove);
+	}
+}
+
+void IRCChannel::adminUser(IRCClient* admin_toadd)
+{
+	if (isUser(admin_toadd) && !isAdmin(admin_toadd))
+	{
+		_admins.insert(admin_toadd);
+	}
+}
+
+void IRCChannel::removeadminUser(IRCClient* admin_toremove)
+{
+	if (isAdmin(admin_toremove))
+	{
+		_admins.erase(admin_toremove);
+	}
 }
