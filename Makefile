@@ -8,7 +8,7 @@ CXXFLAGS:=-Wall -Wextra -std=c++98 -Iincludes/ $(DEPS)
 BUILD_DIR = $(shell realpath ./build)
 BASE_PATH = $(shell pwd)
 
-LIBS_NAMES = core commandparser socketserver
+LIBS_NAMES = core commandparser socketserver logger
 LIBS_FILES = $(addprefix $(BUILD_DIR)/, $(addsuffix .a, $(addprefix lib, $(LIBS_NAMES))))
 LIBS_FLAGS = $(addprefix -l, $(LIBS_NAMES))
 
@@ -34,13 +34,16 @@ CXXFLAGS += -Werror -pedantic
 endif
 
 all:
+	$(shell mkdir -p $(BUILD_DIR)) 
 	$(MAKE) -C ./commandparser libcommandparser.a
 	$(MAKE) -C ./socketserver libsocketserver.a
 	$(MAKE) -C ./core libcore.a
+	$(MAKE) -C ./logger liblogger.a
+	$(MAKE) $(NAME)
 
 
 $(NAME): $(OBJ)
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ -L$(BUILD_DIR) $(LIBS_FLAGS) 
 	@printf "\t'$@' compiled ($(CXX), $(CXXFLAGS), [$^])\n"
 
 

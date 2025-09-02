@@ -8,7 +8,7 @@ FSANF=-fsanitize=address
 AR=ar rcs
 CXXFLAGS=-Wall -Wextra -std=c++98 -Iincludes/ $(DEPS)
 
-SRC=Logger.cpp Colors.cpp
+SRC=IRCClient.cpp IRCServer.cpp
 OBJDIR=./build
 OBJ=$(addprefix $(OBJDIR)/,$(SRC:.cpp=.o))
 
