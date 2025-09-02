@@ -92,7 +92,7 @@ SocketServer::serve(void)
 
       if (c.fileno() >= 0) {
         FD_SET(c.fileno(), &rfds);
-        if (c.outsz() >= 0)
+        if (c.outsz() > 0)
           FD_SET(c.fileno(), &wfds);
         if (c.fileno() > fdmax)
           fdmax = c.fileno();
