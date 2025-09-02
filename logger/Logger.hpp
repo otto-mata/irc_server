@@ -43,9 +43,7 @@ private:
 public:
   Engine();
   Engine(std::string name);
-  Engine(std::string name, LogLevel level);
   Engine(char const* name);
-  Engine(char const* name, LogLevel level);
   ~Engine();
   bool fatalOccured(void) const;
   int warnings(void) const;

@@ -5,7 +5,7 @@
 
 IRCServer::IRCServer()
   : SocketServer(6667)
-  , logger("IRCServer", Logging::DEBUG)
+  , logger("IRCServer")
 {
 }
 
