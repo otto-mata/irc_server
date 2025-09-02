@@ -41,7 +41,8 @@ std::set<IRCClient*> IRCChannel::getUserList()
 
 IRCClient* IRCChannel::getUser(std::string user_name)
 {
-	// return user with name
+	(void)user_name;
+	return NULL;
 }
 
 std::set<IRCClient*> IRCChannel::getAdminList()
@@ -51,7 +52,8 @@ std::set<IRCClient*> IRCChannel::getAdminList()
 
 IRCClient* getAdmin(std::string admin_name)
 {
-	// return admin with name
+	(void)admin_name;
+	return NULL;
 }
 
 std::string IRCChannel::getTopic()
@@ -112,12 +114,14 @@ bool IRCChannel::isUser(IRCClient* user_tofind)
 
 bool IRCChannel::isUser(int user_tofind)
 {
-	//check with id
+	(void)user_tofind;
+	return false;
 }
 
 bool IRCChannel::isUser(std::string user_tofind)
 {
-	//check with name
+	(void)user_tofind;
+	return false;
 }
 
 bool IRCChannel::isAdmin(IRCClient* admin_tofind)
@@ -127,12 +131,14 @@ bool IRCChannel::isAdmin(IRCClient* admin_tofind)
 
 bool IRCChannel::isAdmin(int admin_tofind)
 {
-	//check with id
+	(void)admin_tofind;
+	return false;
 }
 
 bool IRCChannel::isAdmin(std::string admin_tofind)
 {
-	//check with name
+	(void)admin_tofind;
+	return false;
 }
 
 void IRCChannel::addUser(IRCClient* user_toadd)
