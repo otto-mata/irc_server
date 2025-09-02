@@ -33,7 +33,6 @@ class Engine
 {
 private:
   std::string _name;
-  LogLevel _level;
   int _warnCount;
   int _errCount;
   bool _fatalOccured;
