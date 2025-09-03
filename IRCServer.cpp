@@ -2,21 +2,10 @@
 #include <algorithm>
 #include <iostream>
 #include <string>
-struct client_by_fd
-{
-public:
-  client_by_fd(int cfd)
-    : fd(cfd)
-  {
-  }
-  bool operator()(IRCClient const& c) { return c.fd() == fd; }
-
-private:
-  int fd;
-};
 
 IRCServer::IRCServer()
   : SocketServer(6667)
+  , logger("IRCServer")
 {
 }
 
@@ -27,24 +16,25 @@ IRCServer::onRequest(Request* req)
 {
   if (!req)
     return (0);
+ 
+  std::map<int, IRCClient*>::iterator itClient = _cMap.find(req->origin());
+  IRCClient* user;
 
-  VClients::iterator itClient = std::find_if(
-    _ircClients.begin(), _ircClients.end(), client_by_fd(req->origin()));
-  if (itClient != _ircClients.end() && req->size() == 0) {
-    std::cout << "[*][IRCServer] Disconnected client" << std::endl;
-    _ircClients.erase(itClient);
-  }
-  if (itClient == _ircClients.end()) {
-    std::cout << "[+][IRCServer] New client" << std::endl;
+  if (itClient != _cMap.end() && req->size() == 0) {
+    logger.debug("Client disconnected");
+    cMap.erase(itClient);
+    return 0;
+  } else if (itClient == _cMap.end()) {
+    logger.log("New client");
     Client& c = clientByFileno(req->origin());
-    _ircClients.push_back(IRCClient(c));
-    itClient = _ircClients.end() - 1;
+    _cMap[req->origin()] = new IRCClient(c);
   }
+  user = _cMap[req->origin()];
   std::string reqBody(req->raw());
-  itClient->addToBuffer(reqBody);
-  std::cout << itClient->getBuffer() << std::endl; 
-  if (itClient->bufferReady()) {
-    if (itClient->getBuffer() == "PING\r\n")
+  user->addToBuffer(reqBody);
+  std::cout << user->getBuffer() << std::endl;
+  if (user->bufferReady()) {
+    if (user->getBuffer() == "PING\r\n")
       return new Response("PONG\r\n");
   }
 
@@ -54,8 +44,47 @@ IRCServer::onRequest(Request* req)
 void
 IRCServer::onClientDisconnect(Client& c)
 {
-  VClients::iterator itClient = std::find_if(
-    _ircClients.begin(), _ircClients.end(), client_by_fd(c.fileno()));
-  _ircClients.erase(itClient);
-  std::cout << "[*][SocketServer] Client disconnected." << std::endl;
+  std::map<int, IRCClient*>::iterator itClient = _cMap.find(c.fileno());
+
+  _cMap.erase(itClient);
+  logger.debug("Client disconnected");
+}
+
+void
+IRCServer::createChannel(std::string channelName)
+{
+  if (_channels.find(channelName) != _channels.end()) {
+    //! TODO: ERROR HANDLING
+
+    _logger.err("Cannot create channel '" + channelName +
+               "'. Channel already exists.");
+    return;
+  }
+  _channels[channelName] = IRCChannel(channelName);
+}
+
+void
+IRCServer::addUserToChannel(IRCClient* c, std::string channelName)
+{
+  if (_channels.find(channelName) == _channels.end()) {
+    //! TODO: ERROR HANDLING
+
+    _ogger.err("Cannot add user to channel '" + channelName +
+               "'. Channel doesn't exist.");
+    return;
+  }
+  _channels[channelName].addUser(c);
+}
+
+void
+IRCServer::addAdminToChannel(IRCClient* c, std::string channelName)
+{
+  if (_channels.find(channelName) == _channels.end()) {
+    //! TODO: ERROR HANDLING
+
+    _ogger.err("Cannot add admin to channel '" + channelName +
+               "'. Channel doesn't exist.");
+    return;
+  }
+  _channels[channelName].adminUser(c);
 }
