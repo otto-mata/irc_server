@@ -1,9 +1,16 @@
 #include "Command.hpp"
+#include "Scanner.hpp"
+#include "../IRCServer.hpp"
 
-Command::Command(std::vector<Token>& tv)
+Command::Command() : _server(NULL) {}
+
+Command::Command(IRCServer *serv) : _server(serv) {}
+
+void Command::parse(std::string text)
 {
 	size_t i = 0;
-
+	Scanner s(text);
+	std::vector<Token> tv = s.scanTokens();
 	_cmd = "";
 	_source = "";
 	_trailing = "";
@@ -62,7 +69,7 @@ std::string Command::getSource()
 	return _source;
 }
 
-std::string Command::getSource()
+std::string Command::getCommand()
 {
 	return _cmd;
 }
@@ -77,29 +84,57 @@ std::string Command::getTrailing()
 	return _trailing;
 }
 
-void Command::executeCmd()
+void Command::execute()
 {
-	
-
+	if (this->_cmd == "MSG")
+	{
+		// exec MSG
+		return ;
+	}
+	if (_params.size() > 0 && _server->doesChannelExist(_params[0]) == false)
+	{
+		// channel not found
+		return ;
+	}
 	if (this->_cmd == "KICK")
 	{
-		
+		this->executeKick();
 		return ;
 	}
 	if (this->_cmd == "INVITE")
 	{
-		
+		this->executeInvite();
 		return ;
 	}
 	if (this->_cmd == "TOPIC")
 	{
-
+		this->executeTopic();
 		return ;
 	}
 	if (this->_cmd == "MODE")
 	{
-
+		this->executeMode();
 		return ;
 	}
 	// error msg command not found
+}
+
+void Command::executeKick()
+{
+
+}
+
+void Command::executeInvite()
+{
+
+}
+
+void Command::executeTopic()
+{
+
+}
+
+void Command::executeMode()
+{
+
 }

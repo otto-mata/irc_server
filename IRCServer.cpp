@@ -7,6 +7,7 @@ IRCServer::IRCServer()
   : SocketServer(6667)
   , logger("IRCServer")
 {
+	_commandExecutor = Command(this);
 }
 
 IRCServer::~IRCServer() {}
@@ -34,7 +35,7 @@ IRCServer::onRequest(Request* req)
   user->addToBuffer(reqBody);
   std::cout << user->getBuffer() << std::endl;
   if (user->bufferReady()) {
-	Command command();
+	//Command command();
   }
 
   return 0;
@@ -87,3 +88,5 @@ IRCServer::addAdminToChannel(IRCClient* c, std::string channelName)
   }
   _channels[channelName].adminUser(c);
 }
+
+bool IRCServer::doesChannelExist(std::string ChannelName) {return (_channels.find(ChannelName) != _channels.end());}

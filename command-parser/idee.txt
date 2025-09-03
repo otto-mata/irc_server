@@ -5,7 +5,7 @@ if target exists && in channel
 {
 	if user is admin
 	{
-		kick target
+		remove target from user and whitelist
 		notify channel of kick
 	}
 }
@@ -20,12 +20,12 @@ if target exists && not in channel
 	{
 		if user is admin
 		{
-			invite target to channel
+			add target to whitelist
 		} 
 	}
 	else
 	{
-		invite target to channel
+		add target to whitelist
 	}
 }
 

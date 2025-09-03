@@ -1,7 +1,15 @@
 #include "IRCServer.hpp"
 
-int main(void)
+int main(int argc, char **argv)
 {
-  IRCServer server = IRCServer();
-  server.serve();
+  if (argc < 2)
+    return (1);
+  IRCServer serv;
+  Command cmd = Command(&serv);
+  std::string text = argv[1];
+  cmd.parse(text);
+  std::cout << cmd.getSource() << std::endl;
+  std::cout << cmd.getCommand() << std::endl;
+  std::cout << cmd.getParams()[1] << std::endl;
+  std::cout << cmd.getTrailing() << std::endl;
 }

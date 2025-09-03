@@ -10,6 +10,10 @@ int main(int argc, char **argv)
   std::string arg(argv[1]);
   Scanner s(arg);
   std::vector<Token> v = s.scanTokens();
-  Command cmd = Command(v);
-  std::cout << cmd.toString();
+  IRCServer serv;
+  Command cmd = Command(&serv);
+  std::cout << cmd.getSource() << std::endl;
+  std::cout << cmd.getCommand() << std::endl;
+  std::cout << cmd.getParams()[1] << std::endl;
+  std::cout << cmd.getTrailing() << std::endl;
 }

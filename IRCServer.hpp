@@ -7,7 +7,6 @@
 #include <map>
 #include "command-parser/Command.hpp"
 #include <vector>
-#include <map>
 #include "logger/Logger.hpp"
 
 typedef std::vector<IRCClient> VClients;
@@ -17,6 +16,7 @@ class IRCServer : public SocketServer
 private:
   std::map<int, IRCClient*> cMap;
   std::map<std::string, IRCChannel> _channels;
+  Command _commandExecutor;
   Logging::Engine logger;
 
 public:
@@ -27,6 +27,7 @@ public:
   void createChannel(std::string channelName);
   void addUserToChannel(IRCClient* c, std::string channelName);
   void addAdminToChannel(IRCClient* c, std::string channelName);
+  bool doesChannelExist(std::string ChannelName);
 };
 
 #endif

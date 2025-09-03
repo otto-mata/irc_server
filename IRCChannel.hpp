@@ -19,6 +19,7 @@ class IRCChannel
 	private:
 		std::string _name;
 		std::set<IRCClient*> _users;
+		std::set<IRCClient*> _whitelist;
 		std::set<IRCClient*> _admins;
 		std::string _topic;
 		int _userLimitCount;
