@@ -6,10 +6,10 @@
 class Command
 {
 private:
-  std::string* source;
-  std::string cmd;
-  std::vector<std::string>* params;
-  std::string* trailing;
+  std::string* _source;
+  std::string _cmd;
+  std::vector<std::string>* _params;
+  std::string* _trailing;
 public:
   Command(std::vector<Token>& tv);
   ~Command();

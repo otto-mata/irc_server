@@ -1,13 +1,13 @@
 #ifndef IRCCLIENT_HPP
-#define IRCCLIENT_HPP
-#include "socket-server/Client.hpp"
-#include <string>
-#include <sstream>
+# define IRCCLIENT_HPP
+# include "socket-server/Client.hpp"
+# include <string>
+# include <sstream>
 
-class IRCClient
+class IRCClient : public Client
 {
 private:
-  Client* socketClient;
+  Client* _socketClient;
   std::string _nickname;
   std::string _buffering;
 

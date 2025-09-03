@@ -4,20 +4,18 @@
 #include "IRCChannel.hpp"
 #include "IRCClient.hpp"
 #include "socket-server/Socket.hpp"
-#include <map>
 #include <vector>
 #include <map>
 #include "logger/Logger.hpp"
 
-typedef std::vector<IRCClient> VClients;
+// typedef std::vector<IRCClient> VClients;
 
 class IRCServer : public SocketServer
 {
 private:
-  std::map<int, IRCClient*> cMap;
   std::map<std::string, IRCChannel> _channels;
-  Logging::Engine logger;
-
+  std::map<int, IRCClient*> *_cMap;
+  Logging::Engine _logger;
 public:
   IRCServer(/* args */);
   ~IRCServer();

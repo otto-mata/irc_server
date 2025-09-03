@@ -1,4 +1,4 @@
-NAME=ircserv
+	NAME=ircserv
 CXX=c++
 DEPS=-MMD -MP
 DEBUGF=-g -O0

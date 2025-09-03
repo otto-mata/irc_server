@@ -1,23 +1,24 @@
+
 #include "IRCClient.hpp"
 
 IRCClient::IRCClient()
-  : socketClient(0)
+  : _socketClient(0)
 {
 }
 
 
 IRCClient::IRCClient(Client& sockC)
-  : socketClient(&sockC)
+  : _socketClient(&sockC)
 {
 }
 
-IRCClient::IRCClient(IRCClient const& other): socketClient(other.socketClient) {}
+IRCClient::IRCClient(IRCClient const& other): _socketClient(other._socketClient) {}
 
 IRCClient&
 IRCClient::operator=(IRCClient const& other)
 {
   if (this != &other)
-    socketClient = other.socketClient;
+    _socketClient = other._socketClient;
   return (*this);
 }
 
@@ -26,8 +27,8 @@ IRCClient::~IRCClient() {}
 int
 IRCClient::fd(void)
 {
-  if (socketClient)
-    return socketClient->fileno();
+  if (_socketClient)
+    return _socketClient->fileno();
   else
     return -1;
 }
@@ -35,8 +36,8 @@ IRCClient::fd(void)
 int
 IRCClient::fd(void) const
 {
-  if (socketClient)
-    return socketClient->fileno();
+  if (_socketClient)
+    return _socketClient->fileno();
   else
     return -1;
 }
@@ -44,8 +45,8 @@ IRCClient::fd(void) const
 bool
 IRCClient::connected(void)
 {
-  if (socketClient)
-    return socketClient->connected();
+  if (_socketClient)
+    return _socketClient->connected();
   else
    return false;
 }
@@ -53,8 +54,8 @@ IRCClient::connected(void)
 bool
 IRCClient::connected(void) const
 {
-  if (socketClient)
-    return socketClient->connected();
+  if (_socketClient)
+    return _socketClient->connected();
   else
    return false;
 }
@@ -63,7 +64,7 @@ IRCClient::connected(void) const
 void
 IRCClient::clear(void)
 {
-  socketClient = 0;
+  _socketClient = 0;
 }
 
 void

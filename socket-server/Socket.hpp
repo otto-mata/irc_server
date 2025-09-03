@@ -6,6 +6,8 @@
 #include <exception>
 #include <sstream>
 #include <stdexcept>
+#include <map>
+
 
 #ifndef BACKLOG
 #define BACKLOG 5
@@ -22,11 +24,12 @@
 class SocketServer
 {
 private:
-  unsigned short port;
-  int fd;
-  SockAddrIn in;
-  bool mustStop;
-  Client clients[MAX_CLIENTS];
+  unsigned short _port;
+  int _fd;
+  SockAddrIn _in;
+  bool _mustStop;
+protected:
+  std::map<int, Client*> *_clients;
 
 public:
   SocketServer(unsigned short serverPort);
@@ -36,7 +39,6 @@ public:
   int fileno(void);
   virtual void onClientDisconnect(Client& c);
   virtual Response* onRequest(Request* req);
-  Client& clientByFileno(int fd);
   class SocketServerException : public std::exception
   {
   public:

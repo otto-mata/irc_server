@@ -5,13 +5,13 @@
 class Client
 {
 private:
-  int fd;
-  char buffer[PKT_SIZE + 1];
-  char rbuffer[PKT_SIZE + 1];
-  size_t outlen;
-  Response* res;
-  bool mustSend;
-  bool disconnected;
+  int _fd;
+  char _buffer[PKT_SIZE + 1];
+  char _rbuffer[PKT_SIZE + 1];
+  size_t _outlen;
+  Response* _res;
+  bool _mustSend;
+  bool _disconnected;
 
 public:
   Client(void);
