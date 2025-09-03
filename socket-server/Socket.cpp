@@ -11,6 +11,7 @@
 
 SocketServer::SocketServer(unsigned short serverPort)
 {
+  _clients = new std::map<int, Client*>;
   _port = htons(serverPort);
   _fd = socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
   if (_fd < 0)
@@ -43,6 +44,8 @@ SocketServer::SocketServer(unsigned short serverPort)
 SocketServer::~SocketServer()
 {
   std::cout << "Shutting down server..." << std::endl;
+//cleanup tout les clients ?
+  delete _clients;
   close(_fd);
   std::cout << "Server shut down successfully." << std::endl;
 }
@@ -54,16 +57,6 @@ SocketServer::onRequest(Request* req)
             << std::endl;
   delete req;
   return new Response();
-}
-
-Client&
-SocketServer::clientByFileno(int fd)
-{
-  for (size_t i = 0; i < MAX_CLIENTS; i++) {
-    if (_clients[i].fileno() == fd)
-      return (_clients[i]);
-  }
-  throw SocketServer::ClientNotFound();
 }
 
 void
@@ -87,17 +80,13 @@ SocketServer::serve(void)
     FD_SET(_fd, &rfds);
     fdmax = _fd;
 
-    for (int i = 0; i < MAX_CLIENTS; ++i) {
-      Client& c = _clients[i];
-
-      if (c.fileno() >= 0) {
-        FD_SET(c.fileno(), &rfds);
-        if (c.outsz() > 0)
-          FD_SET(c.fileno(), &wfds);
-        if (c.fileno() > fdmax)
-          fdmax = c.fileno();
+    //setClientFds() <== maybe mettre dans la fonction et faire le reste pour la suite
+    for (std::map<int, Client*>::iterator it = _clients->begin() ;
+      it != _clients->end();
+      it++){
+        FD_SET(it->first, &rfds);
+        FD_SET(it->first, &wfds);
       }
-    }
 
     int sel = select(fdmax + 1, &rfds, &wfds, 0, &tv);
     if (sel < 0 && errno != EINTR) {
@@ -111,6 +100,8 @@ SocketServer::serve(void)
         perror("SocketServer::serve - accept");
         return;
       }
+      //ICI AVEC UN ITTERATOR voir une fonction a pars en vraaaaais de vrais
+      (*_clients)
       std::cerr << "[+][SocketServer] New client connected on fd " << cfd
                 << std::endl;
       for (int i = 0; i < MAX_CLIENTS; i++) {
@@ -122,6 +113,7 @@ SocketServer::serve(void)
       }
     }
 
+    //faire une fonctio et on seras tres heureux
     for (int i = 0; i < MAX_CLIENTS; ++i) {
       Client& c = _clients[i];
       // int clientFd = c.fileno();

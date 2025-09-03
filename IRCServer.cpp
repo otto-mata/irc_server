@@ -7,6 +7,7 @@ IRCServer::IRCServer()
   : SocketServer(6667)
   , _logger("IRCServer")
 {
+  _cMap = reinterpret_cast<std::map<int, IRCClient*> *>(_clients);
 }
 
 IRCServer::~IRCServer() {}
@@ -16,20 +17,20 @@ IRCServer::onRequest(Request* req)
 {
   if (!req)
     return (0);
- 
-  std::map<int, IRCClient*>::iterator itClient = _cMap.find(req->origin());
+
+  std::map<int, IRCClient*>::iterator itClient = _cMap->find(req->origin());
   IRCClient* user;
 
-  if (itClient != _cMap.end() && req->size() == 0) {
+  if (itClient != _cMap->end() && req->size() == 0) {
     _logger.debug("Client disconnected");
-    _cMap.erase(itClient);
+    _cMap->erase(itClient);
     return 0;
-  } else if (itClient == _cMap.end()) {
+  } else if (itClient == _cMap->end()) {
     _logger.log("New client");
-    Client& c = clientByFileno(req->origin());
+    Client& c = (req->origin());
     _cMap[req->origin()] = new IRCClient(c);
   }
-  user = _cMap[req->origin()];
+  user = (_cMap)[req->origin()];
   std::string reqBody(req->raw());
   user->addToBuffer(reqBody);
   std::cout << user->getBuffer() << std::endl;
@@ -44,9 +45,9 @@ IRCServer::onRequest(Request* req)
 void
 IRCServer::onClientDisconnect(Client& c)
 {
-  std::map<int, IRCClient*>::iterator itClient = _cMap.find(c.fileno());
+  std::map<int, IRCClient*>::iterator itClient = _cMap->find(c.fileno());
 
-  _cMap.erase(itClient);
+  _cMap->erase(itClient);
   _logger.debug("Client disconnected");
 }
 
