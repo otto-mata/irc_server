@@ -3,8 +3,9 @@
 #include <iostream>
 #include <string>
 
-IRCServer::IRCServer()
-  : SocketServer(6667)
+IRCServer::IRCServer(unsigned short portNumber, std::string pass)
+  : SocketServer(portNumber)
+  , _pass(pass)
   , logger("IRCServer")
 {
 }
