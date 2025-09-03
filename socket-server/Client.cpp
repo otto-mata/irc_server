@@ -56,7 +56,7 @@ Client::reset(void)
   ::memset(_rbuffer, 0, PKT_SIZE + 1);
 }
 
-Request*
+std::string
 Client::receive(void)
 {
   ssize_t n = recv(_fd, _buffer, PKT_SIZE, 0);

@@ -1,10 +1,10 @@
 #ifndef IRCCLIENT_HPP
-#define IRCCLIENT_HPP
-#include "socket-server/Client.hpp"
-#include <string>
-#include <sstream>
+# define IRCCLIENT_HPP
+# include "socket-server/Client.hpp"
+# include <string>
+# include <sstream>
 
-class IRCClient
+class IRCClient : public Client
 {
 private:
   Client* _socketClient;

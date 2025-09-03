@@ -5,7 +5,7 @@
 
 IRCServer::IRCServer()
   : SocketServer(6667)
-  , logger("IRCServer")
+  , _logger("IRCServer")
 {
 }
 
@@ -21,11 +21,11 @@ IRCServer::onRequest(Request* req)
   IRCClient* user;
 
   if (itClient != _cMap.end() && req->size() == 0) {
-    logger.debug("Client disconnected");
-    cMap.erase(itClient);
+    _logger.debug("Client disconnected");
+    _cMap.erase(itClient);
     return 0;
   } else if (itClient == _cMap.end()) {
-    logger.log("New client");
+    _logger.log("New client");
     Client& c = clientByFileno(req->origin());
     _cMap[req->origin()] = new IRCClient(c);
   }
@@ -47,7 +47,7 @@ IRCServer::onClientDisconnect(Client& c)
   std::map<int, IRCClient*>::iterator itClient = _cMap.find(c.fileno());
 
   _cMap.erase(itClient);
-  logger.debug("Client disconnected");
+  _logger.debug("Client disconnected");
 }
 
 void
@@ -69,7 +69,7 @@ IRCServer::addUserToChannel(IRCClient* c, std::string channelName)
   if (_channels.find(channelName) == _channels.end()) {
     //! TODO: ERROR HANDLING
 
-    _ogger.err("Cannot add user to channel '" + channelName +
+    _logger.err("Cannot add user to channel '" + channelName +
                "'. Channel doesn't exist.");
     return;
   }
@@ -82,7 +82,7 @@ IRCServer::addAdminToChannel(IRCClient* c, std::string channelName)
   if (_channels.find(channelName) == _channels.end()) {
     //! TODO: ERROR HANDLING
 
-    _ogger.err("Cannot add admin to channel '" + channelName +
+    _logger.err("Cannot add admin to channel '" + channelName +
                "'. Channel doesn't exist.");
     return;
   }
