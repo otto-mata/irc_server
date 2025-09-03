@@ -77,7 +77,29 @@ std::string Command::getTrailing()
 	return _trailing;
 }
 
-void Command::executeCmd(void)
+void Command::executeCmd()
 {
+	
 
+	if (this->_cmd == "KICK")
+	{
+		
+		return ;
+	}
+	if (this->_cmd == "INVITE")
+	{
+		
+		return ;
+	}
+	if (this->_cmd == "TOPIC")
+	{
+
+		return ;
+	}
+	if (this->_cmd == "MODE")
+	{
+
+		return ;
+	}
+	// error msg command not found
 }

@@ -5,6 +5,7 @@
 #include "IRCClient.hpp"
 #include "socket-server/Socket.hpp"
 #include <map>
+#include "command-parser/Command.hpp"
 #include <vector>
 #include <map>
 #include "logger/Logger.hpp"

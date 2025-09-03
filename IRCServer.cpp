@@ -34,8 +34,7 @@ IRCServer::onRequest(Request* req)
   user->addToBuffer(reqBody);
   std::cout << user->getBuffer() << std::endl;
   if (user->bufferReady()) {
-    if (user->getBuffer() == "PING\r\n")
-      return new Response("PONG\r\n");
+	Command command();
   }
 
   return 0;
