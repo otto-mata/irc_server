@@ -1,4 +1,6 @@
 NAME=libcommandparser.a
+BUILD_DIR ?= ../build
+TARGET:=$(BUILD_DIR)/$(NAME)
 CXX=c++
 DEPS=-MMD -MP
 DEBUGF=-g -O0
@@ -24,7 +26,9 @@ endif
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
+$(NAME): $(TARGET)
+
+$(TARGET): $(OBJ)
 	@$(AR) $@ $^
 	@printf "\tArchive '$@' created ($(AR), [$^])\n"
 

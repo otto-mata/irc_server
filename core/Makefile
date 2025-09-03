@@ -1,4 +1,4 @@
-NAME=liblogger.a
+NAME=libcore.a
 BUILD_DIR ?= ../build
 TARGET:=$(BUILD_DIR)/$(NAME)
 CXX=c++
@@ -8,7 +8,7 @@ FSANF=-fsanitize=address
 AR=ar rcs
 CXXFLAGS=-Wall -Wextra -std=c++98 -Iincludes/ $(DEPS)
 
-SRC=Logger.cpp Colors.cpp
+SRC=IRCClient.cpp IRCServer.cpp
 OBJDIR=./build
 OBJ=$(addprefix $(OBJDIR)/,$(SRC:.cpp=.o))
 
@@ -26,14 +26,12 @@ endif
 
 all: $(NAME)
 
-
 $(NAME): $(TARGET)
 
 $(TARGET): $(OBJ)
 	@$(AR) $@ $^
 	@printf "\tArchive '$@' created ($(AR), [$^])\n"
 
--include $(OBJ:.o=.d)
 
 $(OBJDIR)/%.o: %.cpp
 	@mkdir -p $(dir $@)
@@ -53,3 +51,5 @@ re: fclean all
 default: $(NAME)
 
 .PHONY: all clean fclean re top bottom
+
+-include $(OBJ:.o=.d)
