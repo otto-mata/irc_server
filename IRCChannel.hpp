@@ -57,6 +57,8 @@ class IRCChannel
 		bool isUser(int user_tofind);
 		bool isUser(std::string user_tofind);
 
+		bool isUserWhitelist(IRCClient* user_tofind);
+
 		bool isAdmin(IRCClient* admin_tofind);
 		bool isAdmin(int admin_tofind);
 		bool isAdmin(std::string admin_tofind);
@@ -67,7 +69,8 @@ class IRCChannel
 		void adminUser(IRCClient* admin_toadd);
 		void removeadminUser(IRCClient* admin_toremove);
 
-
+		void addUserWhitelist(IRCClient* admin_toadd);
+		void removeUserWhitelist(IRCClient* admin_toremove);
 	
 };
 

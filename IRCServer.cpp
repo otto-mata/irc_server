@@ -90,3 +90,8 @@ IRCServer::addAdminToChannel(IRCClient* c, std::string channelName)
 }
 
 bool IRCServer::doesChannelExist(std::string ChannelName) {return (_channels.find(ChannelName) != _channels.end());}
+
+IRCChannel* IRCServer::getChannel(std::string ChannelName)
+{
+	return (&_channels[ChannelName]);
+}

@@ -28,6 +28,7 @@ public:
   void addUserToChannel(IRCClient* c, std::string channelName);
   void addAdminToChannel(IRCClient* c, std::string channelName);
   bool doesChannelExist(std::string ChannelName);
+  IRCChannel *getChannel(std::string ChannelName);
 };
 
 #endif

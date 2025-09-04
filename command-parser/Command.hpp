@@ -4,6 +4,7 @@
 #include <vector>
 
 class IRCServer;
+class IRCChannel;
 
 class Command
 {
@@ -13,11 +14,11 @@ class Command
 		std::string _cmd;
 		std::vector<std::string> _params;
 		std::string _trailing;
+		IRCChannel *_channel;
 	public:
 		Command();
 		Command(IRCServer *serv);
 		~Command();
-		void executeCmd(void);
 
 		std::string getSource();
 		std::string getCommand();

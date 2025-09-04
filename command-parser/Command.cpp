@@ -93,9 +93,11 @@ void Command::execute()
 	}
 	if (_params.size() > 0 && _server->doesChannelExist(_params[0]) == false)
 	{
+		std::cout << "Channel not found" << std::endl;
 		// channel not found
 		return ;
 	}
+	_channel = _server->getChannel(_params[0]);
 	if (this->_cmd == "KICK")
 	{
 		this->executeKick();
@@ -116,12 +118,22 @@ void Command::execute()
 		this->executeMode();
 		return ;
 	}
+	std::cout << "Invalid Command" << std::endl;
 	// error msg command not found
 }
 
 void Command::executeKick()
 {
-
+	if (_channel->isAdmin(_source) == false)
+	{
+		std::cout << "Kick command requires admin" << std::endl;
+		//error message user isnt admin
+	}
+	if (_channel->isUserWhitelist(_params[2]))
+	{
+		
+	}
+	
 }
 
 void Command::executeInvite()
@@ -131,7 +143,26 @@ void Command::executeInvite()
 
 void Command::executeTopic()
 {
-
+	if (_params.size() > 1)
+	{
+		if (_channel->getTopicModifiable() == false
+		&& _channel->isAdmin(_source) == false)
+		{
+			std::cout << "Channel isnt modifyable and user isnt admin" << std::endl;
+			//error message can't modify topic
+		}
+		std::string res = _params[1];
+		for (int i = 2; i < _params.size(); i++)
+		{
+			res = res + " " + _params[i];
+		}
+		_channel->setTopic(res);
+	}
+	else
+	{
+		std::cout << _channel->getTopic() << std::endl;
+		//display topic
+	}
 }
 
 void Command::executeMode()

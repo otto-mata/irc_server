@@ -176,3 +176,13 @@ void IRCChannel::removeadminUser(IRCClient* admin_toremove)
 		_admins.erase(admin_toremove);
 	}
 }
+
+void addUserWhitelist(IRCClient* admin_toadd)
+{
+
+}
+
+void removeUserWhitelist(IRCClient* admin_toremove)
+{
+	
+}
